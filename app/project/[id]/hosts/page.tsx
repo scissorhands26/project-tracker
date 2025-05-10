@@ -75,7 +75,8 @@ type HostStatus =
   | "scanning"
   | "vulnerable"
   | "exploited"
-  | "completed";
+  | "completed"
+  | "enumerated";
 
 // Extend the Host type to use HostStatus
 type ExtendedHost = Omit<Host, "status"> & {

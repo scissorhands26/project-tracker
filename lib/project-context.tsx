@@ -16,7 +16,8 @@ export type Status =
   | "scanning"
   | "vulnerable"
   | "exploited"
-  | "completed";
+  | "completed"
+  | "enumerated";
 
 export interface Service {
   port: number;
@@ -509,11 +510,11 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
           if (existingProject) {
             // Update existing project
-            updateProject(sampleProject);
+            updateProject(sampleProject as Project);
           } else {
             // Add as new project
-            setProjects([...projects, sampleProject]);
-            setCurrentProject(sampleProject);
+            setProjects([...projects, sampleProject as Project]);
+            setCurrentProject(sampleProject as Project);
           }
 
           toast.success("Sample data loaded", {
