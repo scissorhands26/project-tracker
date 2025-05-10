@@ -42,7 +42,8 @@ export default function ProjectLayout({
         <div className="text-center py-10">
           <h3 className="mt-4 text-lg font-semibold">Project not found</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            The project you're looking for doesn't exist or hasn't been loaded.
+            The project you are looking for does not exist or has not been
+            loaded.
           </p>
         </div>
       </div>
