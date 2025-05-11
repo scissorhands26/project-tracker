@@ -42,8 +42,7 @@ export default function ProjectLayout({
         <div className="text-center py-10">
           <h3 className="mt-4 text-lg font-semibold">Project not found</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            The project you are looking for does not exist or has not been
-            loaded.
+            The project you're looking for doesn't exist or hasn't been loaded.
           </p>
         </div>
       </div>
@@ -56,14 +55,15 @@ export default function ProjectLayout({
     if (pathname.includes("/hosts")) return "hosts";
     if (pathname.includes("/exploits")) return "exploits";
     if (pathname.includes("/credentials")) return "credentials";
-    if (pathname.includes("/sessions")) return "sessions";
     if (pathname.includes("/implants")) return "implants";
+    if (pathname.includes("/network-devices")) return "network-devices";
+    if (pathname.includes("/topology")) return "topology";
     return "overview";
   };
 
   return (
     <div className="container mx-auto py-6">
-      {/* <Breadcrumb className="mb-6">
+      <Breadcrumb className="mb-6">
         <BreadcrumbItem>
           <BreadcrumbLink href="/projects">Projects</BreadcrumbLink>
         </BreadcrumbItem>
@@ -71,7 +71,9 @@ export default function ProjectLayout({
           <ChevronRight className="h-4 w-4" />
         </BreadcrumbSeparator>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/project/${currentProject.project_id}`}>{currentProject.project_name}</BreadcrumbLink>
+          <BreadcrumbLink href={`/project/${currentProject.project_id}`}>
+            {currentProject.project_name}
+          </BreadcrumbLink>
         </BreadcrumbItem>
         {pathname.includes("/networks/") && (
           <>
@@ -79,7 +81,11 @@ export default function ProjectLayout({
               <ChevronRight className="h-4 w-4" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/project/${currentProject.project_id}/networks`}>Networks</BreadcrumbLink>
+              <BreadcrumbLink
+                href={`/project/${currentProject.project_id}/networks`}
+              >
+                Networks
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <ChevronRight className="h-4 w-4" />
@@ -95,7 +101,11 @@ export default function ProjectLayout({
               <ChevronRight className="h-4 w-4" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/project/${currentProject.project_id}/hosts`}>Hosts</BreadcrumbLink>
+              <BreadcrumbLink
+                href={`/project/${currentProject.project_id}/hosts`}
+              >
+                Hosts
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <ChevronRight className="h-4 w-4" />
@@ -105,7 +115,7 @@ export default function ProjectLayout({
             </BreadcrumbItem>
           </>
         )}
-      </Breadcrumb> */}
+      </Breadcrumb>
 
       <div className="flex flex-col gap-2 mb-6">
         <h1 className="text-3xl font-bold">{currentProject.project_name}</h1>
@@ -113,13 +123,25 @@ export default function ProjectLayout({
       </div>
 
       <Tabs defaultValue={getActiveTab()} className="mb-6">
-        <TabsList className="grid grid-cols-6">
+        <TabsList className="grid grid-cols-8">
           <TabsTrigger value="overview" asChild>
             <Link href={`/project/${currentProject.project_id}`}>Overview</Link>
+          </TabsTrigger>
+          <TabsTrigger value="topology" asChild>
+            <Link href={`/project/${currentProject.project_id}/topology`}>
+              Topology
+            </Link>
           </TabsTrigger>
           <TabsTrigger value="networks" asChild>
             <Link href={`/project/${currentProject.project_id}/networks`}>
               Networks
+            </Link>
+          </TabsTrigger>
+          <TabsTrigger value="network-devices" asChild>
+            <Link
+              href={`/project/${currentProject.project_id}/network-devices`}
+            >
+              Devices
             </Link>
           </TabsTrigger>
           <TabsTrigger value="hosts" asChild>

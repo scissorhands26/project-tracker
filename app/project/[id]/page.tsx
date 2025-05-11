@@ -8,7 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Network, Server, Key, Terminal, Calendar, User } from "lucide-react";
+import {
+  Network,
+  Server,
+  Key,
+  Terminal,
+  Calendar,
+  User,
+  Router,
+} from "lucide-react";
 import { format } from "date-fns";
 
 export default function ProjectOverview() {
@@ -19,7 +27,7 @@ export default function ProjectOverview() {
       <div className="text-center py-10">
         <h3 className="mt-4 text-lg font-semibold">Project not found</h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          The project you are looking for does not exist or has not been loaded.
+          The project you're looking for doesn't exist or hasn't been loaded.
         </p>
       </div>
     );
@@ -36,7 +44,7 @@ export default function ProjectOverview() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Networks</CardTitle>
@@ -45,6 +53,20 @@ export default function ProjectOverview() {
           <CardContent>
             <div className="text-2xl font-bold">
               {currentProject.networks.length}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Network Devices
+            </CardTitle>
+            <Router className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {currentProject.network_devices.length}
             </div>
           </CardContent>
         </Card>

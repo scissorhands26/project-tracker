@@ -16,8 +16,7 @@ export type Status =
   | "scanning"
   | "vulnerable"
   | "exploited"
-  | "completed"
-  | "enumerated";
+  | "completed";
 
 export interface Service {
   port: number;
@@ -40,6 +39,21 @@ export interface Network {
   name: string;
   cidr_block: string;
   notes: string;
+}
+
+// Add the NetworkDevice interface after the Network interface
+export interface NetworkDevice {
+  device_id: string;
+  name: string;
+  device_type: string; // router, switch, firewall, etc.
+  ip_addresses: string[]; // Multiple interfaces possible
+  connected_networks: string[]; // References to network_id
+  credentials: string[]; // References to cred_id
+  status: Status;
+  first_seen: string;
+  last_updated: string;
+  notes: string;
+  tags: string[];
 }
 
 export interface Host {
@@ -86,7 +100,7 @@ export interface Implant {
   notes: string;
 }
 
-// Update the Project interface to use implants instead of sessions
+// Update the Project interface to include network devices
 export interface Project {
   project_id: string;
   project_name: string;
@@ -99,9 +113,10 @@ export interface Project {
   exploits: Exploit[];
   credentials: Credential[];
   implants: Implant[];
+  network_devices: NetworkDevice[]; // Add this line
 }
 
-// Update the ProjectContextType interface
+// Update the ProjectContextType interface to include network device operations
 interface ProjectContextType {
   projects: Project[];
   currentProject: Project | null;
@@ -124,6 +139,9 @@ interface ProjectContextType {
   addImplant: (implant: Partial<Implant>) => void;
   updateImplant: (implant: Implant) => void;
   deleteImplant: (implantId: string) => void;
+  addNetworkDevice: (device: Partial<NetworkDevice>) => void; // Add these
+  updateNetworkDevice: (device: NetworkDevice) => void; // Add these
+  deleteNetworkDevice: (deviceId: string) => void; // Add these
   exportData: () => string;
   importData: (jsonData: string) => void;
   loadSampleData: () => void;
@@ -158,6 +176,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("pentestProjects", JSON.stringify(projects));
   }, [projects]);
 
+  // Add new project with empty network_devices array
   const addProject = (project: Partial<Project>) => {
     const newProject: Project = {
       project_id: project.project_id || `proj-${uuidv4().slice(0, 8)}`,
@@ -171,6 +190,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       exploits: project.exploits || [],
       credentials: project.credentials || [],
       implants: project.implants || [],
+      network_devices: project.network_devices || [], // Add this line
     };
 
     setProjects([...projects, newProject]);
@@ -440,6 +460,59 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     updateProject(updatedProject);
   };
 
+  // Add the network device operations after the implant operations
+  // Network Device operations
+  const addNetworkDevice = (device: Partial<NetworkDevice>) => {
+    if (!currentProject) return;
+
+    const newDevice: NetworkDevice = {
+      device_id: device.device_id || `dev-${uuidv4().slice(0, 8)}`,
+      name: device.name || "New Network Device",
+      device_type: device.device_type || "router",
+      ip_addresses: device.ip_addresses || [],
+      connected_networks: device.connected_networks || [],
+      credentials: device.credentials || [],
+      status: device.status || "discovered",
+      first_seen: device.first_seen || new Date().toISOString(),
+      last_updated: device.last_updated || new Date().toISOString(),
+      notes: device.notes || "",
+      tags: device.tags || [],
+    };
+
+    const updatedProject = {
+      ...currentProject,
+      network_devices: [...currentProject.network_devices, newDevice],
+    };
+
+    updateProject(updatedProject);
+  };
+
+  const updateNetworkDevice = (updatedDevice: NetworkDevice) => {
+    if (!currentProject) return;
+
+    const updatedProject = {
+      ...currentProject,
+      network_devices: currentProject.network_devices.map((d) =>
+        d.device_id === updatedDevice.device_id ? updatedDevice : d
+      ),
+    };
+
+    updateProject(updatedProject);
+  };
+
+  const deleteNetworkDevice = (deviceId: string) => {
+    if (!currentProject) return;
+
+    const updatedProject = {
+      ...currentProject,
+      network_devices: currentProject.network_devices.filter(
+        (d) => d.device_id !== deviceId
+      ),
+    };
+
+    updateProject(updatedProject);
+  };
+
   // Export/Import
   const exportData = () => {
     return JSON.stringify(currentProject, null, 2);
@@ -473,7 +546,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Update the ProjectContext.Provider value to include implant operations
+  // Update the ProjectContext.Provider value to include network device operations
   return (
     <ProjectContext.Provider
       value={{
@@ -498,6 +571,9 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         addImplant,
         updateImplant,
         deleteImplant,
+        addNetworkDevice, // Add these
+        updateNetworkDevice, // Add these
+        deleteNetworkDevice, // Add these
         exportData,
         importData,
         loadSampleData: () => {
@@ -510,11 +586,11 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
           if (existingProject) {
             // Update existing project
-            updateProject(sampleProject as Project);
+            updateProject(sampleProject as unknown as Project);
           } else {
             // Add as new project
-            setProjects([...projects, sampleProject as Project]);
-            setCurrentProject(sampleProject as Project);
+            setProjects([...projects, sampleProject as unknown as Project]);
+            setCurrentProject(sampleProject as unknown as Project);
           }
 
           toast.success("Sample data loaded", {

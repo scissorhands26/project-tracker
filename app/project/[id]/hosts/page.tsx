@@ -129,7 +129,7 @@ export default function HostsPage() {
   const [newVulnerability, setNewVulnerability] = useState("");
 
   const handleAddHost = () => {
-    addHost(newHost);
+    addHost(newHost as Host);
     setNewHost({
       ip_address: "",
       hostname: "",
@@ -145,7 +145,7 @@ export default function HostsPage() {
 
   const handleUpdateHost = () => {
     if (editingHost) {
-      updateHost(editingHost);
+      updateHost(editingHost as Host);
       setEditingHost(null);
       setIsEditOpen(false);
     }
