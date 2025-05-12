@@ -1,40 +1,28 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { useEffect } from "react";
-import { useParams, usePathname } from "next/navigation";
-import Link from "next/link";
-import { useProject } from "@/lib/project-context";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { ChevronRight } from "lucide-react";
+import { useEffect } from "react"
+import { useParams, usePathname } from "next/navigation"
+import Link from "next/link"
+import { useProject } from "@/lib/project-context"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { ChevronRight } from "lucide-react"
 
-export default function ProjectLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { projects, currentProject, setCurrentProject } = useProject();
-  const params = useParams();
-  const pathname = usePathname();
-  const projectId = params.id as string;
+export default function ProjectLayout({ children }: { children: React.ReactNode }) {
+  const { projects, currentProject, setCurrentProject } = useProject()
+  const params = useParams()
+  const pathname = usePathname()
+  const projectId = params.id as string
 
   // Set the current project based on the URL parameter
   useEffect(() => {
-    const project = projects.find((p) => p.project_id === projectId);
-    if (
-      project &&
-      (!currentProject || currentProject.project_id !== projectId)
-    ) {
-      setCurrentProject(project);
+    const project = projects.find((p) => p.project_id === projectId)
+    if (project && (!currentProject || currentProject.project_id !== projectId)) {
+      setCurrentProject(project)
     }
-  }, [projectId, projects, currentProject, setCurrentProject]);
+  }, [projectId, projects, currentProject, setCurrentProject])
 
   if (!currentProject) {
     return (
@@ -46,76 +34,23 @@ export default function ProjectLayout({
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   // Determine which tab is active based on the pathname
   const getActiveTab = () => {
-    if (pathname.includes("/networks")) return "networks";
-    if (pathname.includes("/hosts")) return "hosts";
-    if (pathname.includes("/exploits")) return "exploits";
-    if (pathname.includes("/credentials")) return "credentials";
-    if (pathname.includes("/implants")) return "implants";
-    if (pathname.includes("/network-devices")) return "network-devices";
-    if (pathname.includes("/topology")) return "topology";
-    return "overview";
-  };
+    if (pathname.includes("/networks")) return "networks"
+    if (pathname.includes("/hosts")) return "hosts"
+    if (pathname.includes("/exploits")) return "exploits"
+    if (pathname.includes("/credentials")) return "credentials"
+    if (pathname.includes("/implants")) return "implants"
+    if (pathname.includes("/network-devices")) return "network-devices"
+    if (pathname.includes("/topology")) return "topology"
+    return "overview"
+  }
 
   return (
     <div className="container mx-auto py-6">
-      <Breadcrumb className="mb-6">
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/projects">Projects</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <ChevronRight className="h-4 w-4" />
-        </BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbLink href={`/project/${currentProject.project_id}`}>
-            {currentProject.project_name}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {pathname.includes("/networks/") && (
-          <>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                href={`/project/${currentProject.project_id}/networks`}
-              >
-                Networks
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink>Network Details</BreadcrumbLink>
-            </BreadcrumbItem>
-          </>
-        )}
-        {pathname.includes("/hosts/") && !pathname.endsWith("/hosts") && (
-          <>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                href={`/project/${currentProject.project_id}/hosts`}
-              >
-                Hosts
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink>Host Details</BreadcrumbLink>
-            </BreadcrumbItem>
-          </>
-        )}
-      </Breadcrumb>
 
       <div className="flex flex-col gap-2 mb-6">
         <h1 className="text-3xl font-bold">{currentProject.project_name}</h1>
@@ -128,46 +63,30 @@ export default function ProjectLayout({
             <Link href={`/project/${currentProject.project_id}`}>Overview</Link>
           </TabsTrigger>
           <TabsTrigger value="topology" asChild>
-            <Link href={`/project/${currentProject.project_id}/topology`}>
-              Topology
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/topology`}>Topology</Link>
           </TabsTrigger>
           <TabsTrigger value="networks" asChild>
-            <Link href={`/project/${currentProject.project_id}/networks`}>
-              Networks
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/networks`}>Networks</Link>
           </TabsTrigger>
           <TabsTrigger value="network-devices" asChild>
-            <Link
-              href={`/project/${currentProject.project_id}/network-devices`}
-            >
-              Devices
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/network-devices`}>Devices</Link>
           </TabsTrigger>
           <TabsTrigger value="hosts" asChild>
-            <Link href={`/project/${currentProject.project_id}/hosts`}>
-              Hosts
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/hosts`}>Hosts</Link>
           </TabsTrigger>
           <TabsTrigger value="exploits" asChild>
-            <Link href={`/project/${currentProject.project_id}/exploits`}>
-              Exploits
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/exploits`}>Exploits</Link>
           </TabsTrigger>
           <TabsTrigger value="credentials" asChild>
-            <Link href={`/project/${currentProject.project_id}/credentials`}>
-              Credentials
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/credentials`}>Credentials</Link>
           </TabsTrigger>
           <TabsTrigger value="implants" asChild>
-            <Link href={`/project/${currentProject.project_id}/implants`}>
-              Implants
-            </Link>
+            <Link href={`/project/${currentProject.project_id}/implants`}>Implants</Link>
           </TabsTrigger>
         </TabsList>
       </Tabs>
 
       {children}
     </div>
-  );
+  )
 }

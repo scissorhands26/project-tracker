@@ -34,15 +34,7 @@ export function MainNav() {
           >
             Export/Import
           </Link>
-          <Link
-            href="/implants"
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-primary",
-              pathname === "/implants" ? "text-foreground" : "text-muted-foreground",
-            )}
-          >
-            Implants
-          </Link>
+
         </nav>
       </div>
     </div>

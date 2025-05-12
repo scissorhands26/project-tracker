@@ -1,19 +1,26 @@
-"use client";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Shield, FileJson } from "lucide-react";
-import { useProject } from "@/lib/project-context";
+"use client"
+
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Shield, Network, Server, Key, Terminal, FileJson, Router } from "lucide-react"
+
+// Add this import at the top of the file
+import { useProject } from "@/lib/project-context"
 
 export default function Home() {
-  const { loadSampleData, projects } = useProject();
-  const projectCount = projects.length;
+  // Add this inside the component, before the return statement
+  const { loadSampleData } = useProject()
+
+  // Add these variables inside the component, before the return statement
+  const { projects, currentProject } = useProject()
+  const projectCount = projects.length
+  const networkCount = currentProject ? currentProject.networks.length : 0
+  const networkDeviceCount = currentProject ? currentProject.network_devices.length : 0
+  const hostCount = currentProject ? currentProject.hosts.length : 0
+  const credentialCount = currentProject ? currentProject.credentials.length : 0
+  // Update the sessions count to implants count
+  const implantCount = currentProject ? currentProject.implants.length : 0
 
   return (
     <div className="container mx-auto py-10">
@@ -21,8 +28,7 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold tracking-tight">PenTest Tracker</h1>
           <p className="text-muted-foreground">
-            Track your penetration testing projects, networks, hosts, and
-            exploits
+            Track your penetration testing projects, networks, hosts, and exploits
           </p>
         </div>
 
@@ -42,17 +48,15 @@ export default function Home() {
             </CardFooter>
           </Card>
 
+
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Export/Import
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Export/Import</CardTitle>
               <FileJson className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Export or import project data
-              </p>
+              <p className="text-sm text-muted-foreground">Export or import project data</p>
             </CardContent>
             <CardFooter>
               <Button asChild variant="outline" className="w-full">
@@ -67,9 +71,7 @@ export default function Home() {
               <FileJson className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Load sample penetration testing data
-              </p>
+              <p className="text-sm text-muted-foreground">Load sample penetration testing data</p>
             </CardContent>
             <CardFooter>
               <Button onClick={loadSampleData} className="w-full">
@@ -80,5 +82,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }
